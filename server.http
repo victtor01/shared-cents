@@ -1,0 +1,42 @@
+@HOST = http://localhost:8080
+
+POST {{HOST}}/users
+Content-Type: application/json
+
+{
+  "lastName": "José Victor",
+  "firstName": "Araújo",
+  "username": "não deve estar em branco",
+  "email": "user3@gmail.com",
+  "password": "123456"
+}
+
+###
+
+POST {{HOST}}/auth
+Content-Type: application/json
+
+{
+  "email": "user3@gmail.com",
+  "password": "123456"
+}
+
+###
+
+POST {{HOST}}/workspaces HTTP/1.1
+Content-Type: application/json
+
+{
+	"name": "teste",
+  "icon": "HOME"
+}
+
+
+###
+GET {{HOST}}/workspaces HTTP/1.1
+
+###
+
+POST {{HOST}}/auth/clear-cookies HTTP/1.1
+
+###

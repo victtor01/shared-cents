@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: finance
+  datasource:
+    url: jdbc:postgresql://localhost:5454/finance
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+security:
+  jwt:
+    secret-key: 3fn9q8f0h3a0fh3a09fh0hf93jf12hfgxpoakp0p
+    expiration-time: 50000
+    long-expiration-time: 1000000
+
+debug: true
+
+cors:
+  origin: http://10.220.0.8:3000
