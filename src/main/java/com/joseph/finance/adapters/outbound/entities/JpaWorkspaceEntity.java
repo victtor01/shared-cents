@@ -23,7 +23,7 @@ public class JpaWorkspaceEntity {
     private String icon;
 
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<JpaFinanceEntry> financeEntries;
+    private List<JpaFinanceTransaction> financeEntries;
 
     @ManyToMany()
     @JoinTable(

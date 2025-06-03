@@ -1,7 +1,7 @@
 package com.joseph.finance.domain.builders;
 
 
-import com.joseph.finance.domain.models.FinanceEntry;
+import com.joseph.finance.domain.models.FinanceTransaction;
 import com.joseph.finance.domain.models.User;
 import com.joseph.finance.domain.models.Workspace;
 
@@ -16,7 +16,7 @@ public class UserBuilder {
     private String email;
     private String password;
     private List<Workspace> workspaces = List.of();
-    private List<FinanceEntry> financeEntries = List.of();
+    private List<FinanceTransaction> financeEntries = List.of();
 
     public UserBuilder id(UUID id) {
         this.id = id;
@@ -53,7 +53,7 @@ public class UserBuilder {
         return this;
     }
 
-    public UserBuilder getFinanceEntries(List<FinanceEntry> financialRecordResponsibles) {
+    public UserBuilder getFinanceEntries(List<FinanceTransaction> financialRecordResponsibles) {
         this.financeEntries = financialRecordResponsibles;
         return this;
     }
@@ -86,7 +86,7 @@ public class UserBuilder {
         return workspaces;
     }
 
-    public List<FinanceEntry> financeEntries() {
+    public List<FinanceTransaction> financeEntries() {
         return financeEntries;
     }
 

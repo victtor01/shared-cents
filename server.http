@@ -12,7 +12,6 @@ Content-Type: application/json
 }
 
 ###
-
 POST {{HOST}}/auth
 Content-Type: application/json
 
@@ -22,21 +21,31 @@ Content-Type: application/json
 }
 
 ###
-
 POST {{HOST}}/workspaces HTTP/1.1
 Content-Type: application/json
 
-{
+{     
 	"name": "teste",
   "icon": "HOME"
 }
-
 
 ###
 GET {{HOST}}/workspaces HTTP/1.1
 
 ###
-
 POST {{HOST}}/auth/clear-cookies HTTP/1.1
 
 ###
+POST {{HOST}}/transactions/income HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "first transaction",
+  "amount": 2,
+  "payment_method": "PIX",
+  "workspaceId": "3E89hHv5Aq"
+}
+
+###
+
+GET {{HOST}}/transactions/3E89hHv5Aq HTTP/1.1

@@ -1,25 +1,27 @@
 package com.joseph.finance.adapters.outbound.entities;
 
+
 import com.joseph.finance.domain.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "finance_entries")
-public class JpaFinanceEntry {
+@SuperBuilder
+@Entity
+@Table(name = "finance_transactions")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "entry_type", discriminatorType = DiscriminatorType.STRING)
+public class JpaFinanceTransaction {
     @Id()
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private String id;
 
     @Column(name = "name", nullable = false)
     private String name;
