@@ -18,4 +18,5 @@ public class WorkspaceResponse {
     private String name;
     private String icon;
     private List<UserResponse> members = List.of();
+    private int amount = 0;
 }

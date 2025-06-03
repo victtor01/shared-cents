@@ -16,6 +16,7 @@ public class WorkspaceMapper {
         workspace.setIcon(jpaWorkspaceEntity.getIcon());
         workspace.setUser(UserMapper.toDomain(jpaWorkspaceEntity.getOwner()));
         workspace.setFinanceEntry(List.of());
+        workspace.setAmount(jpaWorkspaceEntity.getAmount());
         workspace.setMembers(Optional.ofNullable(jpaWorkspaceEntity.getMembers())
             .stream()
             .flatMap(List::stream)
@@ -33,6 +34,7 @@ public class WorkspaceMapper {
             .owner(UserMapper.toEntity(workspace.getUser()))
             .icon(workspace.getIcon())
             .name(workspace.getName())
+            .amount(workspace.getAmount())
             .members(Optional.ofNullable(workspace.getMembers())
                 .stream()
                 .flatMap(List::stream)

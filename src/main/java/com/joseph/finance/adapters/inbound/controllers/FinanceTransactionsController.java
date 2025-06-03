@@ -1,11 +1,14 @@
 package com.joseph.finance.adapters.inbound.controllers;
 
+import com.joseph.finance.adapters.inbound.dtos.request.CreateExpenseRequest;
 import com.joseph.finance.adapters.inbound.dtos.request.CreateIncomeRequest;
 import com.joseph.finance.adapters.inbound.dtos.response.TransactionResponse;
 import com.joseph.finance.adapters.inbound.mappers.TransactionMapper;
+import com.joseph.finance.application.commands.CreateExpenseCommand;
 import com.joseph.finance.application.commands.CreateIncomeCommand;
 import com.joseph.finance.application.ports.in.FinanceTransactionServicePort;
 import com.joseph.finance.application.ports.in.SessionServicePort;
+import com.joseph.finance.domain.models.ExpenseTransaction;
 import com.joseph.finance.domain.models.FinanceTransaction;
 import com.joseph.finance.domain.models.IncomeTransaction;
 import jakarta.validation.Valid;
@@ -40,7 +43,7 @@ public class FinanceTransactionsController {
 
 
     @PostMapping("/income")
-    public ResponseEntity<IncomeTransaction> save(@Valid @RequestBody CreateIncomeRequest createIncomeTransactionRequest) {
+    public ResponseEntity<IncomeTransaction> saveIncome(@Valid @RequestBody CreateIncomeRequest createIncomeTransactionRequest) {
 
         IncomeTransaction income = this.financeTransactionServicePort.createIncome(
             new CreateIncomeCommand(
@@ -56,5 +59,20 @@ public class FinanceTransactionsController {
         return ResponseEntity.status(HttpStatus.OK).body(income);
     }
 
+    @PostMapping("/expense")
+    public ResponseEntity<ExpenseTransaction> saveExpense(@Valid @RequestBody CreateExpenseRequest createExpenseRequest) {
+        ExpenseTransaction income = this.financeTransactionServicePort.createExpense(
+            new CreateExpenseCommand(
+                createExpenseRequest.name(),
+                sessionServicePort.getUser(),
+                createExpenseRequest.description(),
+                createExpenseRequest.workspaceId(),
+                createExpenseRequest.paymentMethod(),
+                createExpenseRequest.amount(),
+                createExpenseRequest.status()
+            )
+        );
 
+        return ResponseEntity.status(HttpStatus.OK).body(income);
+    }
 }

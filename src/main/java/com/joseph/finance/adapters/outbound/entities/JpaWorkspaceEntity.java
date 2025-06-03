@@ -25,6 +25,9 @@ public class JpaWorkspaceEntity {
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JpaFinanceTransaction> financeEntries;
 
+    @Column(name = "amount")
+    private int amount = 0;
+
     @ManyToMany()
     @JoinTable(
         name = "workspace_members",

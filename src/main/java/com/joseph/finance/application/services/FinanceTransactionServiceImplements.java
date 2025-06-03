@@ -1,16 +1,19 @@
 package com.joseph.finance.application.services;
 
 import com.joseph.finance.adapters.outbound.repositories.FinanceTransactionsRepositoryImplements;
+import com.joseph.finance.application.commands.CreateExpenseCommand;
 import com.joseph.finance.application.commands.CreateIncomeCommand;
 import com.joseph.finance.application.ports.in.FinanceTransactionServicePort;
 import com.joseph.finance.application.ports.out.FinanceTransactionsRepositoryPort;
 import com.joseph.finance.application.ports.out.WorkspacesRepositoryPort;
+import com.joseph.finance.domain.models.ExpenseTransaction;
 import com.joseph.finance.domain.models.FinanceTransaction;
 import com.joseph.finance.domain.models.IncomeTransaction;
 import com.joseph.finance.domain.models.Workspace;
 import com.joseph.finance.shared.exceptions.BadRequestException;
 import com.joseph.finance.shared.exceptions.NotFoundException;
 import com.joseph.finance.shared.utils.RandomIdGenerator;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,12 @@ public class FinanceTransactionServiceImplements implements FinanceTransactionSe
     private final FinanceTransactionsRepositoryPort financeTransactionsRepositoryPort;
     private final WorkspacesRepositoryPort workspacesRepositoryPort;
 
+    private Workspace findWorkspaceOrThrow(String workspaceId) {
+        return this.workspacesRepositoryPort.findById(workspaceId).orElseThrow(
+            () -> new BadRequestException("workspace not exists!")
+        );
+    }
+
     @Autowired
     public FinanceTransactionServiceImplements(FinanceTransactionsRepositoryPort financeTransactionsRepositoryPort, WorkspacesRepositoryPort workspacesRepositoryPort) {
         this.financeTransactionsRepositoryPort = financeTransactionsRepositoryPort;
@@ -31,9 +40,7 @@ public class FinanceTransactionServiceImplements implements FinanceTransactionSe
 
     @Override
     public IncomeTransaction createIncome(CreateIncomeCommand createIncomeCommand) {
-        Workspace workspace = this.workspacesRepositoryPort.findById(createIncomeCommand.workspaceId()).orElseThrow(
-            () -> new BadRequestException("workspace not exists!")
-        );
+        Workspace workspace = this.findWorkspaceOrThrow(createIncomeCommand.workspaceId());
 
         IncomeTransaction income = IncomeTransaction.builder()
             .id(RandomIdGenerator.generateRandomId())
@@ -46,6 +53,33 @@ public class FinanceTransactionServiceImplements implements FinanceTransactionSe
             .build();
 
         return this.financeTransactionsRepositoryPort.saveIncome(income);
+    }
+
+    @Override
+    @Transactional
+    public ExpenseTransaction createExpense(CreateExpenseCommand createExpenseCommand) {
+        Workspace workspace = this.findWorkspaceOrThrow(createExpenseCommand.workspaceId());
+
+        if (workspace.getAmount() < createExpenseCommand.amount()) {
+            throw new BadRequestException("Saldo do workspace insuficiente!");
+        }
+
+        workspace.subtractAmount(createExpenseCommand.amount());
+
+        ExpenseTransaction expense = ExpenseTransaction.builder()
+            .id(RandomIdGenerator.generateRandomId())
+            .user(createExpenseCommand.user())
+            .name(createExpenseCommand.name())
+            .description(createExpenseCommand.description())
+            .amount(createExpenseCommand.amount())
+            .paymentMethod(createExpenseCommand.paymentMethod())
+            .workspace(workspace)
+            .status(createExpenseCommand.expenseTransactionStatus())
+            .build();
+
+        this.workspacesRepositoryPort.save(workspace);
+
+        return this.financeTransactionsRepositoryPort.saveExpense(expense);
     }
 
     @Override

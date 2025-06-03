@@ -6,10 +6,11 @@ import com.joseph.finance.domain.models.ExpenseTransaction;
 import com.joseph.finance.domain.models.IncomeTransaction;
 
 public class ExpenseMapper {
-    public JpaExpenseTransaction toEntity(ExpenseTransaction expenseTransaction) {
+    public static JpaExpenseTransaction toEntity(ExpenseTransaction expenseTransaction) {
         return JpaExpenseTransaction.builder()
             .id(expenseTransaction.getId())
             .amount(expenseTransaction.getAmount())
+            .name(expenseTransaction.getName())
             .description(expenseTransaction.getDescription())
             .paymentMethod(expenseTransaction.getPaymentMethod())
             .user(UserMapper.toEntity(expenseTransaction.getUser()))
@@ -18,10 +19,11 @@ public class ExpenseMapper {
             .build();
     }
 
-    public ExpenseTransaction toDomain(JpaExpenseTransaction expenseTransaction) {
+    public static ExpenseTransaction toDomain(JpaExpenseTransaction expenseTransaction) {
         return ExpenseTransaction.builder()
             .id(expenseTransaction.getId())
             .amount(expenseTransaction.getAmount())
+            .name(expenseTransaction.getName())
             .description(expenseTransaction.getDescription())
             .paymentMethod(expenseTransaction.getPaymentMethod())
             .status(expenseTransaction.getStatus())

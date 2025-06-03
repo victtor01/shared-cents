@@ -9,6 +9,7 @@ public class WorkspaceMapper {
             .id(workspace.getId())
             .icon(workspace.getIcon())
             .name(workspace.getName())
+            .amount(workspace.getAmount())
             .members(workspace.getMembers().stream().map(UserMapper::toResponse).toList())
             .build();
     }
