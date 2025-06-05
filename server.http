@@ -26,7 +26,7 @@ Content-Type: application/json
 
 {     
 	"name": "teste",
-  "icon": "HOME"
+    "icon": "HOME"
 }
 
 ###

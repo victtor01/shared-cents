@@ -1,6 +1,5 @@
 package com.joseph.finance.application.services;
 
-import com.joseph.finance.adapters.outbound.repositories.FinanceTransactionsRepositoryImplements;
 import com.joseph.finance.application.commands.CreateExpenseCommand;
 import com.joseph.finance.application.commands.CreateIncomeCommand;
 import com.joseph.finance.application.ports.in.FinanceTransactionServicePort;
