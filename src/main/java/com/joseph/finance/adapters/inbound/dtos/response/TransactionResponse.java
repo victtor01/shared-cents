@@ -1,6 +1,7 @@
 package com.joseph.finance.adapters.inbound.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.joseph.finance.domain.enums.ExpenseTransactionStatus;
 import com.joseph.finance.domain.enums.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,4 +22,6 @@ public class TransactionResponse {
     private PaymentMethod paymentMethod;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Integer amount;
+    private ExpenseTransactionStatus status;
 }

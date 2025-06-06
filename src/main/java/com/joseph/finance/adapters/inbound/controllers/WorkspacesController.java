@@ -6,8 +6,11 @@ import com.joseph.finance.adapters.inbound.mappers.WorkspaceMapper;
 import com.joseph.finance.application.commands.CreateWorkspaceCommand;
 import com.joseph.finance.application.ports.in.SessionServicePort;
 import com.joseph.finance.application.ports.in.WorkspacesServicePort;
+import com.joseph.finance.domain.models.User;
 import com.joseph.finance.domain.models.Workspace;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +42,15 @@ public class WorkspacesController {
 
         return ResponseEntity.status(HttpStatus.OK).body(workspace);
     }
+
+    @GetMapping("/{workspaceId}")
+    public ResponseEntity<WorkspaceResponse> findById(@Valid @NotNull @NotBlank @PathVariable String workspaceId) {
+        UUID user = sessionServicePort.getId();
+        Workspace workspace = this.workspacesServicePort.findByUserAndId(user, workspaceId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(WorkspaceMapper.toResponse(workspace));
+    }
+
 
     @GetMapping
     public ResponseEntity<List<WorkspaceResponse>> findAll() {

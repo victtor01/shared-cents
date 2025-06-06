@@ -3,8 +3,10 @@ package com.joseph.finance.adapters.outbound.mappers;
 import com.joseph.finance.adapters.outbound.entities.JpaWorkspaceEntity;
 import com.joseph.finance.domain.models.Workspace;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class WorkspaceMapper {
     public static Workspace toDomain(JpaWorkspaceEntity jpaWorkspaceEntity) {
@@ -15,13 +17,17 @@ public class WorkspaceMapper {
         workspace.setName(jpaWorkspaceEntity.getName());
         workspace.setIcon(jpaWorkspaceEntity.getIcon());
         workspace.setUser(UserMapper.toDomain(jpaWorkspaceEntity.getOwner()));
-        workspace.setFinanceEntry(List.of());
         workspace.setAmount(jpaWorkspaceEntity.getAmount());
+        workspace.setFinanceEntry(List.of());
         workspace.setMembers(Optional.ofNullable(jpaWorkspaceEntity.getMembers())
             .stream()
             .flatMap(List::stream)
             .map(UserMapper::toDomain)
             .toList());
+//        workspace.setFinanceEntry(jpaWorkspaceEntity.getFinanceEntries()
+//            .stream()
+//            .map(FinanceTransactionMapper::toDomain)
+//            .collect(Collectors.toCollection(ArrayList::new)));
 
         return workspace;
     }

@@ -34,13 +34,11 @@ public class FinanceTransactionsController {
 
     @GetMapping("/{workspaceId}")
     public ResponseEntity<List<TransactionResponse>> findAll(@PathVariable String workspaceId) {
-
         List<FinanceTransaction> transactions = this.financeTransactionServicePort
             .findAll(workspaceId, sessionServicePort.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(transactions.stream().map(TransactionMapper::toResponse).toList());
     }
-
 
     @PostMapping("/income")
     public ResponseEntity<IncomeTransaction> saveIncome(@Valid @RequestBody CreateIncomeRequest createIncomeTransactionRequest) {

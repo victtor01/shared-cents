@@ -31,6 +31,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
 
         OutputStream out = response.getOutputStream();
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         objectMapper.writeValue(out, errorResponse);
         out.flush();
     }

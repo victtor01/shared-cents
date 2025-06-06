@@ -9,4 +9,5 @@ import java.util.UUID;
 public interface WorkspacesServicePort {
     Workspace save(CreateWorkspaceCommand createWorkspaceCommand);
     List<Workspace> findAllByUserOrWhereIsMember(UUID userId);
+    Workspace findByUserAndId(UUID userId, String workspaceId);
 }

@@ -38,8 +38,10 @@ public class FinanceTransactionServiceImplements implements FinanceTransactionSe
     }
 
     @Override
+    @Transactional
     public IncomeTransaction createIncome(CreateIncomeCommand createIncomeCommand) {
         Workspace workspace = this.findWorkspaceOrThrow(createIncomeCommand.workspaceId());
+        workspace.incrementAmount(createIncomeCommand.amount());
 
         IncomeTransaction income = IncomeTransaction.builder()
             .id(RandomIdGenerator.generateRandomId())
@@ -51,7 +53,11 @@ public class FinanceTransactionServiceImplements implements FinanceTransactionSe
             .workspace(workspace)
             .build();
 
-        return this.financeTransactionsRepositoryPort.saveIncome(income);
+        var saved = this.financeTransactionsRepositoryPort.saveIncome(income);
+
+        this.workspacesRepositoryPort.save(workspace);
+
+        return saved;
     }
 
     @Override
@@ -65,6 +71,8 @@ public class FinanceTransactionServiceImplements implements FinanceTransactionSe
 
         workspace.subtractAmount(createExpenseCommand.amount());
 
+        this.workspacesRepositoryPort.save(workspace);
+
         ExpenseTransaction expense = ExpenseTransaction.builder()
             .id(RandomIdGenerator.generateRandomId())
             .user(createExpenseCommand.user())
@@ -75,8 +83,6 @@ public class FinanceTransactionServiceImplements implements FinanceTransactionSe
             .workspace(workspace)
             .status(createExpenseCommand.expenseTransactionStatus())
             .build();
-
-        this.workspacesRepositoryPort.save(workspace);
 
         return this.financeTransactionsRepositoryPort.saveExpense(expense);
     }

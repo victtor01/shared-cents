@@ -3,6 +3,7 @@ package com.joseph.finance.adapters.outbound.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -22,8 +23,8 @@ public class JpaWorkspaceEntity {
     @Column(name = "icon")
     private String icon;
 
-    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<JpaFinanceTransaction> financeEntries;
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+    private List<JpaFinanceTransaction> financeEntries = new ArrayList<>();
 
     @Column(name = "amount")
     private int amount = 0;
@@ -34,7 +35,7 @@ public class JpaWorkspaceEntity {
         joinColumns = @JoinColumn(name = "workspace_id"),
         inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private List<JpaUserEntity> members;
+    private List<JpaUserEntity> members = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
