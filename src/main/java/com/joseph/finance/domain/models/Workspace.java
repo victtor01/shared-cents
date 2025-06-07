@@ -23,8 +23,14 @@ public class Workspace {
     private int amount = 0;
 
     public void subtractAmount(int sub) {
-        if (this.amount < sub) throw new BadRequestException("Saldo insuficiente");
-        this.amount -= sub;
+        int amountToSubtract = Math.abs(sub);
+
+        if (this.amount < amountToSubtract) {
+            throw new BadRequestException("Saldo insuficiente");
+        }
+
+        this.amount -= amountToSubtract;
+
     }
 
     public void incrementAmount(int sub) {

@@ -15,6 +15,7 @@ public class TransactionMapper {
                 .amount(financeTransaction.getAmount())
                 .status(((ExpenseTransaction) financeTransaction).getStatus())
                 .createdAt(financeTransaction.getCreatedAt())
+                .user(UserMapper.toResponse(financeTransaction.getUser()))
                 .build();
         }
 
@@ -25,6 +26,7 @@ public class TransactionMapper {
             .updatedAt(financeTransaction.getUpdatedAt())
             .amount(financeTransaction.getAmount())
             .createdAt(financeTransaction.getCreatedAt())
+            .user(UserMapper.toResponse(financeTransaction.getUser()))
             .build();
     }
 

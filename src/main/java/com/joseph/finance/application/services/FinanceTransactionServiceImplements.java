@@ -5,6 +5,7 @@ import com.joseph.finance.application.commands.CreateIncomeCommand;
 import com.joseph.finance.application.ports.in.FinanceTransactionServicePort;
 import com.joseph.finance.application.ports.out.FinanceTransactionsRepositoryPort;
 import com.joseph.finance.application.ports.out.WorkspacesRepositoryPort;
+import com.joseph.finance.domain.enums.ExpenseTransactionStatus;
 import com.joseph.finance.domain.models.ExpenseTransaction;
 import com.joseph.finance.domain.models.FinanceTransaction;
 import com.joseph.finance.domain.models.IncomeTransaction;
@@ -65,13 +66,18 @@ public class FinanceTransactionServiceImplements implements FinanceTransactionSe
     public ExpenseTransaction createExpense(CreateExpenseCommand createExpenseCommand) {
         Workspace workspace = this.findWorkspaceOrThrow(createExpenseCommand.workspaceId());
 
-        if (workspace.getAmount() < createExpenseCommand.amount()) {
-            throw new BadRequestException("Saldo do workspace insuficiente!");
+        if (createExpenseCommand.amount() >= 0) {
+            throw new BadRequestException("Amount deve ser negativo!");
         }
 
-        workspace.subtractAmount(createExpenseCommand.amount());
+        if (createExpenseCommand.expenseTransactionStatus() == ExpenseTransactionStatus.PAID) {
+            if (workspace.getAmount() < Math.abs(createExpenseCommand.amount())) {
+                throw new BadRequestException("Saldo do workspace insuficiente!");
+            }
 
-        this.workspacesRepositoryPort.save(workspace);
+            workspace.subtractAmount(createExpenseCommand.amount());
+            this.workspacesRepositoryPort.save(workspace);
+        }
 
         ExpenseTransaction expense = ExpenseTransaction.builder()
             .id(RandomIdGenerator.generateRandomId())

@@ -24,4 +24,5 @@ public class TransactionResponse {
     private LocalDateTime updatedAt;
     private Integer amount;
     private ExpenseTransactionStatus status;
+    private UserResponse user;
 }

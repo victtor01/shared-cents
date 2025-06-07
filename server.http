@@ -26,8 +26,8 @@ POST {{HOST}}/workspaces HTTP/1.1
 Content-Type: application/json
 
 {     
-	"name": "aquiss",
-    "icon": "MONEY"
+	"name": "ESPAÇO 2",
+  "icon": "HOME"
 }
 
 ###
@@ -42,9 +42,9 @@ Content-Type: application/json
 
 {
   "name": "teste",
-  "amount": 45,
+  "amount": 500,
   "payment_method": "PIX",
-  "workspaceId": "iw1JKFjuA0"
+  "workspaceId": "Rv46sSkSfu"
 }
 
 ###
@@ -52,12 +52,12 @@ POST {{HOST}}/transactions/expense HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "Amburguer",
-  "amount": 4,
+  "name": "CHOCOLATE",
+  "amount": -300,
   "payment_method": "PIX",
-  "workspaceId": "iw1JKFjuA0",
+  "workspaceId": "Rv46sSkSfu",
   "status": "PENDING"
 }
 
 ###
-GET {{HOST}}/transactions/iw1JKFjuA0 HTTP/1.1
+GET {{HOST}}/transactions/Rv46sSkSfu HTTP/1.1

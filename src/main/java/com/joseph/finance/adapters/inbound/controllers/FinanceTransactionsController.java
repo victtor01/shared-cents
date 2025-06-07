@@ -37,7 +37,11 @@ public class FinanceTransactionsController {
         List<FinanceTransaction> transactions = this.financeTransactionServicePort
             .findAll(workspaceId, sessionServicePort.getId());
 
-        return ResponseEntity.status(HttpStatus.OK).body(transactions.stream().map(TransactionMapper::toResponse).toList());
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(transactions.stream()
+            .map(TransactionMapper::toResponse)
+                .toList());
     }
 
     @PostMapping("/income")

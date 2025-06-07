@@ -3,9 +3,7 @@ package com.joseph.finance.adapters.inbound.dtos.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.joseph.finance.domain.enums.ExpenseTransactionStatus;
 import com.joseph.finance.domain.enums.PaymentMethod;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 public record CreateExpenseRequest(
     @NotNull
@@ -15,7 +13,7 @@ public record CreateExpenseRequest(
     @JsonProperty("payment_method")
     PaymentMethod paymentMethod,
 
-    @Min(1)
+    @Negative
     @NotNull
     Integer amount,
 
