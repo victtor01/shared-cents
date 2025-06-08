@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class UsersRepositoryImplements implements UsersRepositoryPort {
@@ -19,7 +20,6 @@ public class UsersRepositoryImplements implements UsersRepositoryPort {
         this.jpaUsersRepository = jpaUsersRepository;
     }
 
-
     @Override
     public Optional<User> save(User user) {
         JpaUserEntity userEntity = this.jpaUsersRepository.save(UserMapper.toEntity(user));
@@ -29,5 +29,15 @@ public class UsersRepositoryImplements implements UsersRepositoryPort {
     @Override
     public Optional<User> findByEmail(String email) {
         return this.jpaUsersRepository.findByEmail(email).map(UserMapper::toDomain);
+    }
+
+    @Override
+    public Optional<User> findById(UUID userId) {
+        return this.jpaUsersRepository.findById(userId).map(UserMapper::toDomain);
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return this.jpaUsersRepository.findByUsername(username).map(UserMapper::toDomain);
     }
 }

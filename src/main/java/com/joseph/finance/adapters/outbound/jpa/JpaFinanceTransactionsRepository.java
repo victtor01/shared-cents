@@ -1,9 +1,7 @@
 package com.joseph.finance.adapters.outbound.jpa;
 
 import com.joseph.finance.adapters.outbound.entities.JpaFinanceTransaction;
-import com.joseph.finance.adapters.outbound.entities.JpaWorkspaceEntity;
 import com.joseph.finance.domain.models.FinanceTransaction;
-import com.joseph.finance.domain.models.Workspace;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

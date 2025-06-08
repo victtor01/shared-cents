@@ -16,6 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "users")
+@Table(name = "users")
 public class JpaUserEntity implements UserDetails {
     @Id()
     @Column(name = "id")
