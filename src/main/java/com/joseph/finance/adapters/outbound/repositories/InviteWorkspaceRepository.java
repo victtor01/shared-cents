@@ -7,6 +7,7 @@ import com.joseph.finance.application.ports.out.InviteWorkspaceRepositoryPort;
 import com.joseph.finance.domain.models.InviteWorkspace;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,7 +27,21 @@ public class InviteWorkspaceRepository implements InviteWorkspaceRepositoryPort 
 
     @Override
     public Optional<InviteWorkspace> findBySenderAndReceiver(UUID sender, UUID receiver) {
-        Optional<JpaInviteWorkspaceEntity> jpaInviteWorkspace = this.jpaInviteWorkspaceRepository.findBySenderAndReceiver(sender, receiver);
+        Optional<JpaInviteWorkspaceEntity> jpaInviteWorkspace = this.jpaInviteWorkspaceRepository.findByReceiver(sender, receiver);
         return jpaInviteWorkspace.map(InviteWorkspaceMapper::toDomain);
+    }
+
+    @Override
+    public List<InviteWorkspace> findAllByReceiver(UUID receiver) {
+        return this.jpaInviteWorkspaceRepository.findByReceiver(receiver)
+            .stream()
+            .map(InviteWorkspaceMapper::toDomain)
+            .toList();
+    }
+
+    @Override
+    public Optional<InviteWorkspace> findById(UUID inviteId) {
+        return this.jpaInviteWorkspaceRepository.findById(inviteId)
+            .map(InviteWorkspaceMapper::toDomain);
     }
 }

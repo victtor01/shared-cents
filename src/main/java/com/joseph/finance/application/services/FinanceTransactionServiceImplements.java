@@ -6,10 +6,7 @@ import com.joseph.finance.application.ports.in.FinanceTransactionServicePort;
 import com.joseph.finance.application.ports.out.FinanceTransactionsRepositoryPort;
 import com.joseph.finance.application.ports.out.WorkspacesRepositoryPort;
 import com.joseph.finance.domain.enums.ExpenseTransactionStatus;
-import com.joseph.finance.domain.models.ExpenseTransaction;
-import com.joseph.finance.domain.models.FinanceTransaction;
-import com.joseph.finance.domain.models.IncomeTransaction;
-import com.joseph.finance.domain.models.Workspace;
+import com.joseph.finance.domain.models.*;
 import com.joseph.finance.shared.exceptions.BadRequestException;
 import com.joseph.finance.shared.exceptions.NotFoundException;
 import com.joseph.finance.shared.utils.RandomIdGenerator;
@@ -99,8 +96,16 @@ public class FinanceTransactionServiceImplements implements FinanceTransactionSe
             () -> new NotFoundException("Workspace not found!")
         );
 
-        if (!workspace.getUser().getId().equals(userId)) {
-            throw new BadRequestException("this workspace not belongs to you!");
+        User owner = workspace.getUser();
+        List<User> members = workspace.getMembers();
+
+        boolean isOwner = owner.getId().equals(userId);
+
+        boolean isMember = members.stream()
+            .anyMatch(member -> member.getId().equals(userId));
+
+        if (!isOwner && !isMember) {
+            throw new BadRequestException("Você não é o dono nem membro deste workspace!");
         }
 
         return this.financeTransactionsRepositoryPort.findAllByWorkspace(workspaceId);

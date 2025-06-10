@@ -46,9 +46,19 @@ public class WorkspacesServiceImplements implements WorkspacesServicePort {
             () -> new NotFoundException("workspace not found!")
         );
 
-        if(!workspace.getUser().getId().equals(userId)) {
-            throw new BadRequestException("workspace not belongs to you!");
+        User owner = workspace.getUser();
+        List<User> members = workspace.getMembers();
+
+        boolean isOwner = owner.getId().equals(userId);
+
+        boolean isMember = members.stream()
+            .anyMatch(member -> member.getId().equals(userId));
+
+        if (!isOwner && !isMember) {
+            throw new BadRequestException("Você não é o dono nem membro deste workspace!");
         }
+
+
 
         return workspace;
     }

@@ -3,7 +3,6 @@ package com.joseph.finance.adapters.outbound.mappers;
 import com.joseph.finance.adapters.outbound.entities.JpaWorkspaceEntity;
 import com.joseph.finance.domain.models.Workspace;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,11 +22,7 @@ public class WorkspaceMapper {
             .stream()
             .flatMap(List::stream)
             .map(UserMapper::toDomain)
-            .toList());
-//        workspace.setFinanceEntry(jpaWorkspaceEntity.getFinanceEntries()
-//            .stream()
-//            .map(FinanceTransactionMapper::toDomain)
-//            .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toList()));
 
         return workspace;
     }
@@ -45,7 +40,7 @@ public class WorkspaceMapper {
                 .stream()
                 .flatMap(List::stream)
                 .map(UserMapper::toEntity)
-                .toList())
+                .collect(Collectors.toList()))
             .financeEntries(List.of())
             .build();
     }

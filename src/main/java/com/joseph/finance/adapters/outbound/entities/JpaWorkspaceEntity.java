@@ -29,7 +29,7 @@ public class JpaWorkspaceEntity {
     @Column(name = "amount")
     private int amount = 0;
 
-    @ManyToMany()
+    @ManyToMany(cascade = { CascadeType.MERGE })
     @JoinTable(
         name = "workspace_members",
         joinColumns = @JoinColumn(name = "workspace_id"),

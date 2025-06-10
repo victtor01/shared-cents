@@ -15,6 +15,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.UUID;
+
 @Service
 public class InviteWorkspaceServiceImplements implements InviteWorkspaceServicePort {
     private final InviteWorkspaceRepositoryPort inviteWorkspaceRepositoryPort;
@@ -59,5 +62,32 @@ public class InviteWorkspaceServiceImplements implements InviteWorkspaceServiceP
         inviteWorkspace.setWorkspace(workspace);
 
         return this.inviteWorkspaceRepositoryPort.save(inviteWorkspace);
+    }
+
+    @Override
+    public List<InviteWorkspace> findAll(UUID receiverId) {
+        return this.inviteWorkspaceRepositoryPort.findAllByReceiver(receiverId);
+    }
+
+    @Override
+    @Transactional
+    public void accept(UUID inviteId, UUID receiverId) {
+        InviteWorkspace invite = this.inviteWorkspaceRepositoryPort.findById(inviteId)
+            .orElseThrow(() -> new BadRequestException("Invite not exists"));
+
+        User receiver = invite.getRecipient();
+        if(!receiver.getId().equals(receiverId)) {
+            throw new BadRequestException("this invite not belongs to you!");
+        }
+
+        Workspace workspace = this.workspacesRepositoryPort
+            .findById(invite.getWorkspace().getId())
+            .orElseThrow(() -> new BadRequestException("workspace not found!"));
+
+        workspace.getMembers().add(receiver);
+        invite.setInviteWorkspaceStatus(InviteWorkspaceStatus.ACCEPTED);
+
+        this.workspacesRepositoryPort.save(workspace);
+        this.inviteWorkspaceRepositoryPort.save(invite);
     }
 }

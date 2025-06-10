@@ -6,14 +6,13 @@ import com.joseph.finance.application.ports.in.InviteWorkspaceServicePort;
 import com.joseph.finance.application.ports.in.SessionServicePort;
 import com.joseph.finance.domain.models.InviteWorkspace;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -26,6 +25,15 @@ public class InviteWorkspaceController {
     public InviteWorkspaceController(InviteWorkspaceServicePort inviteWorkspaceRepositoryPort, SessionServicePort sessionServicePort) {
         this.inviteWorkspaceServicePort = inviteWorkspaceRepositoryPort;
         this.sessionServicePort = sessionServicePort;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<InviteWorkspace>> findAll() {
+        UUID userId = this.sessionServicePort.getId();
+
+        List<InviteWorkspace> invites = this.inviteWorkspaceServicePort.findAll(userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(invites);
     }
 
     @PostMapping
@@ -43,5 +51,14 @@ public class InviteWorkspaceController {
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(inviteWorkspace);
+    }
+
+    @PostMapping("/accept/{inviteId}")
+    public ResponseEntity<String> accept(@PathVariable UUID inviteId) {
+        UUID userId = this.sessionServicePort.getId();
+
+        this.inviteWorkspaceServicePort.accept(inviteId, userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body("accepted");
     }
 }

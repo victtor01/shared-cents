@@ -17,7 +17,7 @@ POST {{HOST}}/auth
 Content-Type: application/json
 
 {
-  "email": "user3@gmail.com",
+  "email": "user@gmail.com",
   "password": "123456"
 }
 
@@ -52,8 +52,8 @@ POST {{HOST}}/transactions/expense HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "CHOCOLATE",
-  "amount": -300,
+  "name": "Açaí",
+  "amount": -1400,
   "payment_method": "PIX",
   "workspaceId": "Rv46sSkSfu",
   "status": "PENDING"
@@ -69,4 +69,15 @@ Content-Type: application/json
 {
   "receiver": "user1",
   "workspaceId": "Rv46sSkSfu"
+}
+
+###
+GET {{HOST}}/workspaces-invites HTTP/1.1
+
+###
+POST {{HOST}}/workspaces-invites/accept/5f96fc07-22a4-46ed-af81-aa2355906484 HTTP/1.1
+Content-Type: application/json
+
+{
+  
 }
