@@ -9,21 +9,15 @@ import jakarta.validation.constraints.NotNull;
 public record CreateIncomeRequest(
     @NotNull
     String name,
-
     @NotNull
     @JsonProperty("payment_method")
     PaymentMethod paymentMethod,
-
     @Min(1)
     @NotNull
     Integer amount,
-
     @NotNull
     @NotBlank
     String workspaceId,
-
     String description
-
-
 ) {
 }

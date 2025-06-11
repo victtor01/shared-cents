@@ -1,6 +1,8 @@
 package com.joseph.finance.adapters.inbound.controllers;
 
 import com.joseph.finance.adapters.inbound.dtos.request.CreateInviteWorkspaceRequest;
+import com.joseph.finance.adapters.inbound.dtos.response.InviteWorkspaceResponse;
+import com.joseph.finance.adapters.inbound.mappers.InviteMapper;
 import com.joseph.finance.application.commands.CreateInviteWorkspaceCommand;
 import com.joseph.finance.application.ports.in.InviteWorkspaceServicePort;
 import com.joseph.finance.application.ports.in.SessionServicePort;
@@ -28,12 +30,13 @@ public class InviteWorkspaceController {
     }
 
     @GetMapping
-    public ResponseEntity<List<InviteWorkspace>> findAll() {
+    public ResponseEntity<List<InviteWorkspaceResponse>> findAll() {
         UUID userId = this.sessionServicePort.getId();
 
         List<InviteWorkspace> invites = this.inviteWorkspaceServicePort.findAll(userId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(invites);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(invites.stream().map(InviteMapper::toResponse).toList());
     }
 
     @PostMapping
