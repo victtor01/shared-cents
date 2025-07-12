@@ -1,23 +1,27 @@
 package com.joseph.finance.adapters.inbound.controllers;
 
+import java.time.LocalDate;
+import java.util.List;
+
+import com.joseph.finance.adapters.inbound.dtos.response.DailyTransactionResponse;
+import com.joseph.finance.application.commands.FindTransactionsCommand;
+import com.joseph.finance.application.records.DailyTransactionsDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import com.joseph.finance.adapters.inbound.dtos.request.CreateExpenseRequest;
 import com.joseph.finance.adapters.inbound.dtos.request.CreateIncomeRequest;
-import com.joseph.finance.adapters.inbound.dtos.response.TransactionResponse;
 import com.joseph.finance.adapters.inbound.mappers.TransactionMapper;
 import com.joseph.finance.application.commands.CreateExpenseCommand;
 import com.joseph.finance.application.commands.CreateIncomeCommand;
 import com.joseph.finance.application.ports.in.FinanceTransactionServicePort;
 import com.joseph.finance.application.ports.in.SessionServicePort;
 import com.joseph.finance.domain.models.ExpenseTransaction;
-import com.joseph.finance.domain.models.FinanceTransaction;
 import com.joseph.finance.domain.models.IncomeTransaction;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/transactions")
@@ -33,20 +37,27 @@ public class FinanceTransactionsController {
     }
 
     @GetMapping("/{workspaceId}")
-    public ResponseEntity<List<TransactionResponse>> findAll(@PathVariable String workspaceId) {
-        List<FinanceTransaction> transactions = this.financeTransactionServicePort
-            .findAll(workspaceId, sessionServicePort.getId());
+    public ResponseEntity<List<DailyTransactionResponse>> findAll(
+        @PathVariable String workspaceId,
+        @RequestParam(required = false) LocalDate startAt,
+        @RequestParam(required = false) LocalDate endAt
+    ) {
+        List<DailyTransactionsDTO> transactions = this.financeTransactionServicePort
+            .findAll(workspaceId, sessionServicePort.getId(), new FindTransactionsCommand(startAt, endAt));
 
+        List<DailyTransactionResponse> responseMap = transactions.stream().map(dailyTransactionsDTO -> {
+            return DailyTransactionResponse.builder()
+                .date(dailyTransactionsDTO.date())
+                .transactions(dailyTransactionsDTO.transactions().stream().map(TransactionMapper::toResponse).toList())
+                .build();
+        }).toList();
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(transactions.stream()
-            .map(TransactionMapper::toResponse)
-                .toList());
+            .body(responseMap);
     }
 
     @PostMapping("/income")
     public ResponseEntity<IncomeTransaction> saveIncome(@Valid @RequestBody CreateIncomeRequest createIncomeTransactionRequest) {
-
         IncomeTransaction income = this.financeTransactionServicePort.createIncome(
             new CreateIncomeCommand(
                 createIncomeTransactionRequest.name(),

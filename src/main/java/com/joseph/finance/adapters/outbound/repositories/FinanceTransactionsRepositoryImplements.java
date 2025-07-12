@@ -14,6 +14,8 @@ import com.joseph.finance.domain.models.IncomeTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -32,8 +34,8 @@ public class FinanceTransactionsRepositoryImplements implements FinanceTransacti
     }
 
     @Override
-    public List<FinanceTransaction> findAllByWorkspace(String workspaceId) {
-        List<JpaFinanceTransaction> jpaWorkspaceEntities = this.jpaFinanceTransactionsRepository.findAllByWorkspace(workspaceId);
+    public List<FinanceTransaction> findAllByWorkspace(String workspaceId, LocalDateTime startAt, LocalDateTime endAt) {
+        List<JpaFinanceTransaction> jpaWorkspaceEntities = this.jpaFinanceTransactionsRepository.findAllByWorkspace(workspaceId, startAt, endAt);
         return jpaWorkspaceEntities.stream().map(FinanceTransactionMapper::toDomain).toList();
     }
 

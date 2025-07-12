@@ -34,6 +34,7 @@ public class InviteWorkspaceServiceImplements implements InviteWorkspaceServiceP
     @Override
     @Transactional
     public InviteWorkspace save(CreateInviteWorkspaceCommand createInviteWorkspaceCommand) {
+
         Workspace workspace = this.workspacesRepositoryPort.findById(createInviteWorkspaceCommand.workspaceId())
             .orElseThrow(() -> new BadRequestException("workspace not found"));
 

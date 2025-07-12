@@ -25,6 +25,8 @@ public class User {
         this.workspaces = builder.getWorkspaces() != null ? new ArrayList<>(builder.getWorkspaces()) : new ArrayList<>();
     }
 
+    public User() {}
+
     public static UserBuilder builder() {
         return new UserBuilder();
     }

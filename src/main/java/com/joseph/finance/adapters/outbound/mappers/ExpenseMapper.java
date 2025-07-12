@@ -14,6 +14,8 @@ public class ExpenseMapper {
             .name(expenseTransaction.getName())
             .description(expenseTransaction.getDescription())
             .paymentMethod(expenseTransaction.getPaymentMethod())
+            .createdAt(expenseTransaction.getCreatedAt())
+            .updatedAt(expenseTransaction.getUpdatedAt())
             .user(UserMapper.toEntity(expenseTransaction.getUser()))
             .workspace(WorkspaceMapper.toEntity(expenseTransaction.getWorkspace()))
             .status(expenseTransaction.getStatus())
@@ -28,6 +30,8 @@ public class ExpenseMapper {
             .description(expenseTransaction.getDescription())
             .paymentMethod(expenseTransaction.getPaymentMethod())
             .status(expenseTransaction.getStatus())
+            .createdAt(expenseTransaction.getCreatedAt())
+            .updatedAt(expenseTransaction.getUpdatedAt())
             .user(UserMapper.toDomain(expenseTransaction.getUser()))
             .workspace(WorkspaceMapper.toDomain(expenseTransaction.getWorkspace()))
             .build();
@@ -43,6 +47,8 @@ public class ExpenseMapper {
             .description(expenseTransaction.getDescription())
             .status(((JpaExpenseTransaction) expenseTransaction).getStatus())
             .paymentMethod(expenseTransaction.getPaymentMethod())
+            .createdAt(expenseTransaction.getCreatedAt())
+            .updatedAt(expenseTransaction.getUpdatedAt())
             .user(UserMapper.toDomain(expenseTransaction.getUser()))
             .workspace(WorkspaceMapper.toDomain(expenseTransaction.getWorkspace()))
             .build();
