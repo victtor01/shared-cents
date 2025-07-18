@@ -4,6 +4,7 @@ import com.joseph.finance.shared.exceptions.BadRequestException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Workspace {
     private String id;
@@ -96,6 +97,24 @@ public class Workspace {
         }
 
         this.amount -= amountToSubtract;
-
     }
+
+    public boolean isOwnerOrMember(UUID userId) {
+        User owner = this.getUser();
+        boolean isOwner = owner.getId().equals(userId);
+
+        boolean isMember = this.members.stream()
+            .anyMatch(member -> member.getId().equals(userId));
+
+        return isMember || isOwner;
+    }
+
+    public void isOwnerOrMemberOrThrow(UUID userId) {
+        boolean isValidMember = this.isOwnerOrMember(userId);
+
+        if(!isValidMember) {
+            throw new BadRequestException("Membro não válido!");
+        }
+    }
+
 }

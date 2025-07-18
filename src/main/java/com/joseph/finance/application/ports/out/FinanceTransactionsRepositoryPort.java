@@ -7,9 +7,11 @@ import com.joseph.finance.domain.models.IncomeTransaction;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface FinanceTransactionsRepositoryPort {
     IncomeTransaction saveIncome(IncomeTransaction income);
     List<FinanceTransaction> findAllByWorkspace(String workspaceId, LocalDateTime startAt, LocalDateTime endAt);
     ExpenseTransaction saveExpense(ExpenseTransaction expenseTransaction);
+    Optional<FinanceTransaction> findById(String financeId);
 }

@@ -2,10 +2,18 @@ package com.joseph.finance.adapters.inbound.controllers;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import com.joseph.finance.adapters.inbound.dtos.response.DailyTransactionResponse;
+import com.joseph.finance.adapters.inbound.dtos.response.TransactionResponse;
+import com.joseph.finance.adapters.outbound.mappers.FinanceTransactionMapper;
 import com.joseph.finance.application.commands.FindTransactionsCommand;
 import com.joseph.finance.application.records.DailyTransactionsDTO;
+import com.joseph.finance.domain.models.FinanceTransaction;
+import com.joseph.finance.domain.models.User;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +44,23 @@ public class FinanceTransactionsController {
         this.sessionServicePort = sessionServicePort;
     }
 
-    @GetMapping("/{workspaceId}")
+    @GetMapping("{transactionId}")
+    public ResponseEntity<TransactionResponse> findById(@Valid @NotEmpty @PathVariable String transactionId) {
+        UUID userId = this.sessionServicePort.getId();
+
+        FinanceTransaction financeTransaction = this.financeTransactionServicePort.findById(transactionId, userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(TransactionMapper.toResponse(financeTransaction));
+    }
+
+    @GetMapping("/workspace/{workspaceId}/{day}")
+    public ResponseEntity<List<TransactionResponse>> findByDay(@PathVariable String workspaceId, @PathVariable LocalDate day) {
+        List<FinanceTransaction> transactions = this.financeTransactionServicePort.findAllByDay(workspaceId, day, this.sessionServicePort.getId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(transactions.stream().map(TransactionMapper::toResponse).toList());
+    }
+
+    @GetMapping("/workspace/{workspaceId}")
     public ResponseEntity<List<DailyTransactionResponse>> findAll(
         @PathVariable String workspaceId,
         @RequestParam(required = false) LocalDate startAt,
@@ -45,12 +69,10 @@ public class FinanceTransactionsController {
         List<DailyTransactionsDTO> transactions = this.financeTransactionServicePort
             .findAll(workspaceId, sessionServicePort.getId(), new FindTransactionsCommand(startAt, endAt));
 
-        List<DailyTransactionResponse> responseMap = transactions.stream().map(dailyTransactionsDTO -> {
-            return DailyTransactionResponse.builder()
-                .date(dailyTransactionsDTO.date())
-                .transactions(dailyTransactionsDTO.transactions().stream().map(TransactionMapper::toResponse).toList())
-                .build();
-        }).toList();
+        List<DailyTransactionResponse> responseMap = transactions.stream().map(dailyTransactionsDTO -> DailyTransactionResponse.builder()
+            .date(dailyTransactionsDTO.date())
+            .transactions(dailyTransactionsDTO.transactions().stream().map(TransactionMapper::toResponse).toList())
+            .build()).toList();
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(responseMap);

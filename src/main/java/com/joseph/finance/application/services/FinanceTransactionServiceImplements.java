@@ -110,13 +110,10 @@ public class FinanceTransactionServiceImplements implements FinanceTransactionSe
             () -> new NotFoundException("Workspace not found!")
         );
 
-        // ... (lógica de validação de usuário continua a mesma) ...
         User owner = workspace.getUser();
-        boolean isOwner = owner.getId().equals(userId);
-        boolean isMember = workspace.getMembers().stream()
-            .anyMatch(member -> member.getId().equals(userId));
+        boolean permission = workspace.isOwnerOrMember(owner.getId());
 
-        if (!isOwner && !isMember) {
+        if (!permission) {
             throw new BadRequestException("Você não é o dono nem membro deste workspace!");
         }
 
@@ -161,4 +158,33 @@ public class FinanceTransactionServiceImplements implements FinanceTransactionSe
             .collect(Collectors.toList());
     }
 
+    @Override
+    public FinanceTransaction findById(String transactionId, UUID userId) {
+        FinanceTransaction transaction = this.financeTransactionsRepositoryPort.findById(transactionId)
+            .orElseThrow(() -> new NotFoundException("Transação não existe!"));
+
+        Workspace workspaceInTransaction = transaction.getWorkspace();
+        workspaceInTransaction.isOwnerOrMemberOrThrow(userId);
+
+        return transaction;
+    }
+
+    @Override
+    public List<FinanceTransaction> findAllByDay(String workspaceId, LocalDate day, UUID userId) {
+        Workspace workspace = this.workspacesRepositoryPort.findById(workspaceId).orElseThrow(
+            () -> new NotFoundException("Workspace not found!")
+        );
+
+        if (!workspace.isOwnerOrMember(userId)) {
+            throw new BadRequestException("Você não é o dono nem membro deste workspace!");
+        }
+
+        LocalDateTime start = day.atStartOfDay();
+        LocalDateTime end = day.atTime(LocalTime.MAX);
+
+        List<FinanceTransaction> foundTransactions = this.financeTransactionsRepositoryPort
+            .findAllByWorkspace(workspaceId, start, end);
+
+        return foundTransactions;
+    }
 }

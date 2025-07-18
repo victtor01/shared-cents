@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class FinanceTransactionsRepositoryImplements implements FinanceTransactionsRepositoryPort {
@@ -43,5 +44,10 @@ public class FinanceTransactionsRepositoryImplements implements FinanceTransacti
     public ExpenseTransaction saveExpense(ExpenseTransaction expenseTransaction) {
         JpaExpenseTransaction saved = this.jpaFinanceTransactionsRepository.save(ExpenseMapper.toEntity(expenseTransaction));
         return ExpenseMapper.toDomain(saved);
+    }
+
+    @Override
+    public Optional<FinanceTransaction> findById(String financeId) {
+        return this.jpaFinanceTransactionsRepository.findById(financeId).map(FinanceTransactionMapper::toDomain);
     }
 }
