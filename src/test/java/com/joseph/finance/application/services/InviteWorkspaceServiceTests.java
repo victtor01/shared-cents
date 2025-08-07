@@ -1,7 +1,6 @@
 package com.joseph.finance.application.services;
 
 import com.joseph.finance.application.commands.CreateInviteWorkspaceCommand;
-import com.joseph.finance.application.ports.in.InviteWorkspaceServicePort;
 import com.joseph.finance.application.ports.out.InviteWorkspaceRepositoryPort;
 import com.joseph.finance.application.ports.out.UsersRepositoryPort;
 import com.joseph.finance.application.ports.out.WorkspacesRepositoryPort;

@@ -79,7 +79,7 @@ public class FinanceTransactionsController {
     }
 
     @PostMapping("/income")
-    public ResponseEntity<IncomeTransaction> saveIncome(@Valid @RequestBody CreateIncomeRequest createIncomeTransactionRequest) {
+    public ResponseEntity<TransactionResponse> saveIncome(@Valid @RequestBody CreateIncomeRequest createIncomeTransactionRequest) {
         IncomeTransaction income = this.financeTransactionServicePort.createIncome(
             new CreateIncomeCommand(
                 createIncomeTransactionRequest.name(),
@@ -91,12 +91,12 @@ public class FinanceTransactionsController {
             )
         );
 
-        return ResponseEntity.status(HttpStatus.OK).body(income);
+        return ResponseEntity.status(HttpStatus.OK).body(TransactionMapper.toResponse((income)));
     }
 
     @PostMapping("/expense")
-    public ResponseEntity<ExpenseTransaction> saveExpense(@Valid @RequestBody CreateExpenseRequest createExpenseRequest) {
-        ExpenseTransaction income = this.financeTransactionServicePort.createExpense(
+    public ResponseEntity<TransactionResponse> saveExpense(@Valid @RequestBody CreateExpenseRequest createExpenseRequest) {
+        ExpenseTransaction expense = this.financeTransactionServicePort.createExpense(
             new CreateExpenseCommand(
                 createExpenseRequest.name(),
                 sessionServicePort.getUser(),
@@ -108,6 +108,6 @@ public class FinanceTransactionsController {
             )
         );
 
-        return ResponseEntity.status(HttpStatus.OK).body(income);
+        return ResponseEntity.status(HttpStatus.OK).body(TransactionMapper.toResponse(expense));
     }
 }
