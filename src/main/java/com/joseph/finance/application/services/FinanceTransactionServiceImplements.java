@@ -170,6 +170,27 @@ public class FinanceTransactionServiceImplements implements FinanceTransactionSe
     }
 
     @Override
+    @Transactional
+    public ExpenseTransaction payExpense(String transactionId, UUID userId) {
+        ExpenseTransaction expense = (ExpenseTransaction) this.findById(transactionId, userId);
+
+        expense.setStatus(ExpenseTransactionStatus.PAID);
+
+        Workspace workspace = expense.getWorkspace();
+
+        if (workspace.getAmount() < Math.abs(expense.getAmount())) {
+            throw new BadRequestException("Saldo do workspace insuficiente!");
+        }
+
+        workspace.subtractAmount(expense.getAmount());
+
+        this.workspacesRepositoryPort.save(workspace);
+        this.financeTransactionsRepositoryPort.saveExpense(expense);
+
+        return expense;
+    }
+
+    @Override
     public List<FinanceTransaction> findAllByDay(String workspaceId, LocalDate day, UUID userId) {
         Workspace workspace = this.workspacesRepositoryPort.findById(workspaceId).orElseThrow(
             () -> new NotFoundException("Workspace not found!")

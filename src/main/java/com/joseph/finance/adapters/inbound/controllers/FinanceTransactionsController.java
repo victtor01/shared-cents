@@ -110,4 +110,13 @@ public class FinanceTransactionsController {
 
         return ResponseEntity.status(HttpStatus.OK).body(TransactionMapper.toResponse(expense));
     }
+
+    @PostMapping("/pay/{transactionId}")
+    public ResponseEntity<TransactionResponse> payTransaction(@Valid @PathVariable String transactionId) {
+        UUID userId = this.sessionServicePort.getId();
+
+        ExpenseTransaction expenseTransaction = this.financeTransactionServicePort.payExpense(transactionId, userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(TransactionMapper.toResponse(expenseTransaction));
+    }
 }

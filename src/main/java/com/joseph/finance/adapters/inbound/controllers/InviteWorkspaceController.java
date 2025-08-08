@@ -8,7 +8,6 @@ import com.joseph.finance.application.ports.in.InviteWorkspaceServicePort;
 import com.joseph.finance.application.ports.in.SessionServicePort;
 import com.joseph.finance.domain.models.InviteWorkspace;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

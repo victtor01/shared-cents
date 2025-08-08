@@ -18,4 +18,5 @@ public interface FinanceTransactionServicePort {
     List<DailyTransactionsDTO> findAll(String workspaceId, UUID userId, FindTransactionsCommand findTransactionsCommand);
     List<FinanceTransaction> findAllByDay(String workspaceId, LocalDate day, UUID userId);
     FinanceTransaction findById(String transactionId, UUID userId);
+    ExpenseTransaction payExpense(String transactionId, UUID userId);
 }
